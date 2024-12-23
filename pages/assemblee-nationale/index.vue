@@ -128,7 +128,7 @@ const parliamentaryActivities = [
     <div class="relative h-52 bg-gray-900">
       <div class="absolute inset-0">
         <img
-          src="/images/menu/assemblee-nationale-2.jpg"
+          src="/images/menu/assemblee-nationale-1.jpg"
           alt="Hémicycle"
           class="h-full w-full object-cover opacity-50"
         />
