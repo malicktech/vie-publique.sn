@@ -210,6 +210,17 @@ export default defineNuxtConfig({
           type: "image/png",
           purpose: "any maskable",
         },
+        {
+          src: "pwa-1024x1024.png",
+          sizes: "1024x1024",
+          type: "image/png",
+        },
+        {
+          src: "pwa-1024x1024.png",
+          sizes: "1024x1024",
+          type: "image/png",
+          purpose: "any maskable",
+        },
       ],
       description: "L'information publique au Sénégal",
       lang: "fr",
