@@ -252,6 +252,19 @@ export default defineNuxtConfig({
           form_factor: "wide",
         },
       ],
+      share_target: {
+        action: "/?utm_medium=PWA&utm_source=share-target&share-target",
+        method: "POST",
+        enctype: "multipart/form-data",
+        params: {
+          files: [
+            {
+              name: "file",
+              accept: ["image/*"],
+            },
+          ],
+        },
+      },
     },
     workbox: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
