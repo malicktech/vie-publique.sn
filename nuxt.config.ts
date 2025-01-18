@@ -208,7 +208,30 @@ export default defineNuxtConfig({
           src: "pwa-512x512.png",
           sizes: "512x512",
           type: "image/png",
-          purpose: "any maskable",
+          purpose: "any",
+        },
+        {
+          src: "pwa-1024x1024.png",
+          sizes: "1024x1024",
+          type: "image/png",
+        },
+        {
+          src: "pwa-1024x1024.png",
+          sizes: "1024x1024",
+          type: "image/png",
+          purpose: "any",
+        },
+        {
+          src: "pwa-512x512.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "maskable",
+        },
+        {
+          src: "pwa-1024x1024.png",
+          sizes: "1024x1024",
+          type: "image/png",
+          purpose: "maskable",
         },
       ],
       description: "L'information publique au Sénégal",
@@ -252,6 +275,19 @@ export default defineNuxtConfig({
           form_factor: "wide",
         },
       ],
+      share_target: {
+        action: "/?utm_medium=PWA&utm_source=share-target&share-target",
+        method: "POST",
+        enctype: "multipart/form-data",
+        params: {
+          files: [
+            {
+              name: "file",
+              accept: ["image/*"],
+            },
+          ],
+        },
+      },
     },
     workbox: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
