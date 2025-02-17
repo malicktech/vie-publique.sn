@@ -2,7 +2,7 @@
   <div class="container mx-auto mb-4">
     <h2 class="mb-2 text-center text-xl font-bold">{{ title }}</h2>
 
-    <div class="mt-0 grid grid-cols-1 gap-2 md:grid-cols-2">
+    <div class="mt-0 grid grid-cols-2 gap-2 md:grid-cols-2">
       <UCard
         v-for="menu in item"
         :key="menu.title"

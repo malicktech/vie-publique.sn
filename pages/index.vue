@@ -12,67 +12,67 @@ useHead({
   ],
 });
 
-const links = [
+const navigationCards = [
   {
-    label: "Conseil des ministres",
-    description: "Communiqués des conseil des ministres...",
-    icon: "i-heroicons-document-text",
+    title: "Assemblée Nationale",
+    description: "Suivez l'activité parlementaire",
+    image: "/images/menu/assemblee-nationale-1.jpg",
+    to: "/assemblee-nationale",
+  },
+  {
+    title: "Annuaire Députés",
+    description: "Découvrez les députés élus",
+    image: "/images/elections/deputes.png",
+    to: "/assemblee-nationale/deputes",
+  },
+  {
+    title: "Budget 2025 Sénégal",
+    description: "Loi de finances 2025",
+    image: "/images/menu/budget-2.jpg",
+    to: "/budget-senegal",
+  },
+  {
+    title: "Conseil des ministres",
+    description: "Communiqués des conseil des ministres",
+    image: "/images/communique-conseil-des-ministres-1.jpg",
     to: "/conseil-des-ministres",
   },
   {
-    label: "Annuaires",
-    description: "Nominations gouvernement, Sites Web, Justice, Medias...",
-    icon: "i-heroicons-identification",
+    title: "Annuaire",
+    description: "Nominations, Sites Web, Justice, Medias...",
+    image: "/images/menu/annuaire-2.svg",
     to: "/annuaires",
   },
   {
-    label: "Documents",
-    description: "Journal officiel, Codes, Rapports OFNAC Cours des comptes...",
-    icon: "i-heroicons-rectangle-stack",
+    title: "Documents",
+    description: "Journal officiel, Codes, Rapports audit...",
+    image: "/images/menu/document-2.svg",
     to: "/documents",
-  },
-  {
-    label: "Budget, Quiz",
-    description:
-      "Fonctionnement de l'état, Guide, Institutions, Budget, Quiz...",
-    icon: "i-heroicons-information-circle",
-    to: "/etat-senegal",
-  },
-];
-
-const newFeatures = [
-  {
-    label: "Législatives 2024",
-    description: "Elections législatives anticipées du 17 Novembre",
-    icon: "i-heroicons-star",
-    to: "/elections",
   },
 ];
 </script>
 
 <template>
   <div class="container mx-auto p-2 sm:p-4">
-    <HomeBanner :menus="newFeatures" />
-
-    <MenuHome :menus="links" />
+    <MenuHome2 :navigation-cards="navigationCards" />
 
     <div class="">
       <div class="prose prose-sm sm:prose mx-auto my-4">
-        <h2 class="text-center text-gray-800">Dernières Publications</h2>
+        <h2 class="text-center text-gray-800">À la une</h2>
       </div>
 
       <HomeNews />
 
       <div class="mt-4 text-center">
-        <NuxtLink
-          to="/publications/actualites"
-          class="text-green-700 underline"
-        >
+        <NuxtLink to="/actualites" class="text-green-700 underline">
           Voir toutes les actualités
         </NuxtLink>
       </div>
 
       <UDivider site="sm" class="mt-4" />
+
+      <!-- <PartnersSection /> -->
+      <!-- <PartnersSection2 /> -->
 
       <div class="mt-4 text-center text-sm text-gray-500 sm:px-8">
         🛈 Vie-Publique est tenu par des bénévoles <br />

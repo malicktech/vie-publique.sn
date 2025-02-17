@@ -121,11 +121,7 @@
 
         <!-- Content -->
         <div v-else>
-          <TransitionGroup
-            name="deputies-grid"
-            tag="div"
-            class="grid grid-cols-2 gap-4 lg:grid-cols-3"
-          >
+          <div class="grid grid-cols-2 gap-4 lg:grid-cols-3">
             <div
               v-for="deputy in filteredDeputies"
               :key="deputy.id"
@@ -196,7 +192,7 @@
                 </div>
               </NuxtLink>
             </div>
-          </TransitionGroup>
+          </div>
         </div>
       </div>
     </div>
@@ -248,12 +244,12 @@ const props = defineProps({
     required: true,
   },
   loading: {
-    type: Object as PropType<Ref<boolean>>,
+    type: Boolean as PropType<boolean>,
     required: true,
   },
   error: {
     type: Object as PropType<Ref<string | null>>,
-    required: false,
+    required: true,
   },
 });
 

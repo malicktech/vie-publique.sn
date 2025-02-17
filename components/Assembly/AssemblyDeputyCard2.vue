@@ -58,7 +58,8 @@ const deputyUrl = computed(() => {
             : '/adobe-default-profil-women.jpg'
         "
         alt="Default image"
-        class="h-full w-full object-cover"
+        size="3xl"
+        class="m-4 shadow-md"
       />
 
       <!-- Overlay sombre uniquement si c'est l'image par défaut -->

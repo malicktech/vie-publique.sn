@@ -1,6 +1,4 @@
 <script setup lang="ts">
-const config = useRuntimeConfig();
-
 const props = defineProps<{
   deputy: {
     id: number;
@@ -8,6 +6,7 @@ const props = defineProps<{
     last_name: string;
     photo: string;
     profession: string;
+    gender: string;
   };
 }>();
 
@@ -27,12 +26,27 @@ const deputyUrl = computed(() => {
     class="flex flex-col items-center transition-opacity hover:opacity-90"
   >
     <img
+      v-if="deputy.photo"
       :src="$directusImageUrl(deputy.photo, '50')"
       :alt="`Photo de ${deputy.first_name} ${deputy.last_name}`"
       class="mb-3 h-32 w-32 rounded-full object-cover shadow-md"
     />
+    <UAvatar
+      v-else
+      :src="
+        deputy.gender === 'M'
+          ? '/adobe-default-profil-man.jpg'
+          : '/adobe-default-profil-women.jpg'
+      "
+      alt="Default image"
+      size="3xl"
+      class="m-4 shadow-md"
+    />
     <div class="text-center font-medium">
-      {{ deputy.first_name }}<br />{{ deputy.last_name }}
+      {{ deputy.first_name.toLowerCase() }}<br />
+      <span class="font-bold tracking-wider">
+        {{ deputy.last_name.toUpperCase() }}
+      </span>
     </div>
     <!-- <div class="text-center text-sm text-gray-600">{{ deputy.profession }}</div> -->
   </NuxtLink>

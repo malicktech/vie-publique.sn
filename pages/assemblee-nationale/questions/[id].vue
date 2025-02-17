@@ -28,7 +28,7 @@ const isImageFile = (fileType: string) => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto py-2">
     <div class="mx-auto max-w-4xl">
       <!-- Bouton retour -->
       <NuxtLink
@@ -52,23 +52,28 @@ const isImageFile = (fileType: string) => {
       <!-- Contenu de la question -->
       <div v-else-if="question" class="space-y-6">
         <!-- En-tête avec info député -->
-        <div class="rounded-lg bg-white p-6 shadow-sm">
-          <div class="mb-6 flex items-center gap-4">
-            <img
-              :src="getImageUrl(question.deputy.photo)"
-              :alt="question.deputy.first_name"
-              class="h-20 w-20 rounded-full object-cover"
-            />
-            <div>
-              <h2 class="text-xl font-bold">
-                {{ question.deputy.first_name }} {{ question.deputy.last_name }}
-              </h2>
-              <div class="text-sm text-gray-500">
-                Question posée le {{ formatDate(question.question_date) }}
+        <div class="rounded-lg bg-white shadow-sm">
+          <NuxtLink
+            :to="`/assemblee-nationale/deputes/${question.deputy.id}/${$getSlugifyUrlPath(question.deputy.first_name + ' ' + question.deputy.last_name)}`"
+            class="block"
+          >
+            <div class="mb-6 flex items-center gap-4">
+              <img
+                :src="getImageUrl(question.deputy.photo)"
+                :alt="question.deputy.first_name"
+                class="h-20 w-20 rounded-full object-cover"
+              />
+              <div>
+                <h2 class="text-xl font-bold">
+                  {{ question.deputy.first_name }}
+                  {{ question.deputy.last_name }}
+                </h2>
+                <div class="text-sm text-gray-500">
+                  {{ formatDate(question.question_date) }}
+                </div>
               </div>
             </div>
-          </div>
-
+          </NuxtLink>
           <h1 class="mb-4 text-2xl font-bold">
             {{ question.subject }}
           </h1>
@@ -78,15 +83,21 @@ const isImageFile = (fileType: string) => {
             class="prose prose-gray max-w-none"
             v-html="question.question_text"
           ></div>
+
+          <NuxtLink
+            :to="`/assemblee-nationale/deputes/${question.deputy.id}/${$getSlugifyUrlPath(question.deputy.first_name + ' ' + question.deputy.last_name)}`"
+            class="block text-blue-600 underline"
+            >Voir son profil</NuxtLink
+          >
         </div>
 
         <!-- Pièces jointes -->
         <div
           v-if="question.attachments?.length > 0"
-          class="rounded-lg bg-white p-6 shadow-sm"
+          class="rounded-lg bg-white shadow-sm"
         >
           <h3 class="mb-4 text-lg font-bold">Documents joints</h3>
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
             <div
               v-for="attachment in question.attachments"
               :key="attachment.directus_files_id.id"

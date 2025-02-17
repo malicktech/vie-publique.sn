@@ -7,7 +7,6 @@ export default defineNitroPlugin((nitroApp) => {
     }
 
     const redirects = config.public.redirects;
-
     const pathname = getRequestURL(event).pathname;
 
     if (!Array.isArray(redirects)) {

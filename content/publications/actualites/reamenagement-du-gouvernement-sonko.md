@@ -71,4 +71,4 @@ Liste des Secrétaires d'État :
 
 **Vidéo**:
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/ANaiJjykgPo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe class="video" width="560" height="315" src="https://www.youtube.com/embed/ANaiJjykgPo" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>

@@ -1,14 +1,69 @@
 <script setup lang="ts">
-// import LayoutSubcategoryAssembly from "~/components/Layout/LayoutSubcategoryAssembly";
+import { useNews } from "~/composables/news/useNews";
+import { useAssemblyQuestions } from "~/composables/useAssemblyQuestions";
+import { useAssemblyVotes } from "~/composables/useAssemblyVotes";
 
+const { news } = useNews({ category: "assemblee-nationale" });
+const { questions } = useAssemblyQuestions();
+const { votes } = useAssemblyVotes();
+
+const navigationCards = [
+  {
+    title: "Députés",
+    description: "Annuaire des députés",
+    image: "/images/elections/deputes.png",
+    to: "/assemblee-nationale/deputes",
+  },
+  {
+    title: "Groupes",
+    description: "Groupes parlementaires",
+    image: "/images/assemblee/assemblee-bureau-1.webp",
+    to: "/assemblee-nationale/groupes",
+  },
+  {
+    title: "Commissions",
+    description: "commissions permanentes",
+    image: "/images/elections/assemble-1.jpg",
+    to: "/assemblee-nationale/commissions",
+  },
+  {
+    title: "Bureau",
+    description: "organisation Assemblée",
+    image: "/images/assemblee/el-malick-pdt-1.jpg",
+    to: "/assemblee-nationale/bureau",
+  },
+  {
+    display: true,
+    image: "/images/menu/assemblee-nationale-vote-1.jpg",
+    title: "Votes",
+    description: "Textes et résolutions votées",
+    icon: "i-heroicons-document-check",
+    to: "/assemblee-nationale/votes",
+    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
+  },
+  {
+    display: true,
+    image: "/images/menu/assemblee-nationale-question-1.jpg",
+    title: "Questions écrites",
+    description: "initiatives parlementaires",
+    icon: "i-heroicons-question-mark-circle",
+    to: "/assemblee-nationale/questions",
+    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
+  },
+];
+
+// SEO
 const seoTitle =
   "Assemblée nationale du Sénégal - Activité parlementaire | Vie-Publique.sn";
 const seoDescription =
   "Suivez l'activité parlementaire de l'Assemblée nationale du Sénégal : séances plénières, commissions, textes adoptés, questions au gouvernement et travaux parlementaires.";
-const seoImgPath = "/images/vpsn-share-elections.png";
-const seoPageUrl = "https://vie-publique.sn/elections/legislatives";
+const seoKeywords =
+  "Assemblée nationale Sénégal, députés sénégalais, parlement sénégal, lois sénégal, séances plénières, commissions parlementaires";
+const seoImgPath = "https://vie-publique.sn/seo-img-assemblee.png";
+const seoPageUrl = "https://vie-publique.sn/assemblee-nationale";
 useHead({
-  title: seoTitle,
+  title:
+    "Assemblée nationale du Sénégal - Activité parlementaire | Vie-Publique.sn",
   meta: [
     {
       name: "description",
@@ -16,8 +71,7 @@ useHead({
     },
     {
       name: "keywords",
-      content:
-        "Assemblée nationale Sénégal, députés sénégalais, parlement sénégal, lois sénégal, séances plénières, commissions parlementaires",
+      content: seoKeywords,
     },
     // Twitter Card Meta Tags
     {
@@ -44,115 +98,191 @@ useHead({
     { property: "og:type", content: "website" },
   ],
 });
-
-const router = useRouter();
-
-const parliamentaryInfos = [
-  {
-    display: true,
-    title: "Les députés",
-    description: "Annuaire 15e législature",
-    icon: "i-heroicons-user",
-    to: "/assemblee-nationale/deputes",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-  {
-    display: true,
-    title: "Présentation",
-    description: "Annuaire 15e législature",
-    icon: "i-heroicons-user",
-    to: "/assemblee-nationale/deputes",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-];
-
-const parliamentaryOrganisation = [
-  {
-    display: true,
-    title: "Les députés",
-    description: "Annuaire 15e législature",
-    icon: "i-heroicons-user",
-    to: "/assemblee-nationale/deputes",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-  {
-    display: true,
-    title: "Les groupes",
-    description: "Groupes parlementaires",
-    icon: "i-heroicons-user-group",
-    to: "/assemblee-nationale/groupes",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-
-  {
-    display: true,
-    title: "Les commissions",
-    description: "Travaux des commissions",
-    icon: "i-heroicons-clipboard-document-list",
-    to: "/assemblee-nationale/commissions",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-  {
-    display: true,
-    title: "Le Bureau",
-    description: "Le président et son équipe",
-    icon: "i-heroicons-document-text",
-    to: "/assemblee-nationale/bureau",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-];
-
-const parliamentaryActivities = [
-  {
-    display: true,
-    title: "Les votes",
-    description: "Textes et résolutions votées",
-    icon: "i-heroicons-document-check",
-    to: "/assemblee-nationale/votes",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-  {
-    display: true,
-    title: "Questions écrites",
-    description: "Questions des députés",
-    icon: "i-heroicons-question-mark-circle",
-    to: "/assemblee-nationale/questions",
-    color: "bg-emerald-100 text-emerald-500 border border-emerald-50",
-  },
-];
 </script>
 
 <template>
   <div>
-    <!-- Hero section avec image de fond -->
-    <div class="relative h-52 bg-gray-900">
-      <div class="absolute inset-0">
-        <img
-          src="/images/menu/assemblee-nationale-1.jpg"
-          alt="Hémicycle"
-          class="h-full w-full object-cover opacity-50"
-        />
+    <!-- En-tête compacte -->
+    <header class="border-b bg-white">
+      <div class="container mx-auto py-4 sm:px-4">
+        <div class="flex items-center justify-between">
+          <div class="prose prose-sm sm:prose">
+            <h1 class="">Assemblée nationale</h1>
+          </div>
+          <!-- <UBadge color="emerald" class="hidden md:block"> 2024 - 2029 </UBadge> -->
+        </div>
+        <p class="mt-2 text-sm text-gray-500">15ème législature 2024-2029</p>
       </div>
-      <div class="absolute left-4 top-4">
-        <p class="font-bold uppercase text-white">Assemblée nationale</p>
-      </div>
-      <div class="absolute right-4 top-4">
-        <UBadge class="sm:text-lg" color="emerald"> 15e législature </UBadge>
-      </div>
-    </div>
+    </header>
 
-    <UContainer class="relative -mt-24">
-      <UCard class="mb-4 bg-white">
-        <LayoutSubcategoryAssembly
-          :item="parliamentaryOrganisation"
-          title="Organisation"
-        />
+    <!-- Main Content -->
+    <main class="container mx-auto sm:px-4">
+      <!-- Navigation Cards -->
+      <div class="mb-2 grid grid-cols-2 gap-2 lg:grid-cols-3">
+        <NuxtLink
+          v-for="card in navigationCards"
+          :key="card.title"
+          :to="card.to"
+          class="group relative h-20 overflow-hidden rounded-lg shadow-sm transition hover:shadow-md md:h-24"
+        >
+          <img
+            :src="card.image"
+            :alt="card.title"
+            class="h-full w-full object-cover"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40"
+          ></div>
+          <div class="absolute inset-0 flex items-center p-2 sm:p-4">
+            <div class="text-white">
+              <h3 class="text-xl font-extrabold">{{ card.title }}</h3>
+              <p
+                class="hidden text-sm font-medium leading-relaxed opacity-90 md:block"
+              >
+                {{ card.description }}
+              </p>
+            </div>
+          </div>
+        </NuxtLink>
+      </div>
+      <div class="mb-2 grid hidden grid-cols-1 gap-0">
+        <NuxtLink
+          to="/code-senegal/reglement-interieur-assemblee-nationale"
+          class="group relative h-24 overflow-hidden rounded-lg shadow-sm transition hover:shadow-md md:h-32"
+        >
+          <img
+            src="/images/menu/assemblee-docs.webp"
+            class="h-full w-full object-cover"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-black/80 to-black/40"
+          ></div>
+          <div class="absolute inset-0 flex items-center p-2 sm:p-4">
+            <div class="text-white">
+              <h3 class="text-xl font-extrabold">Documents</h3>
+              <p
+                class="hidden text-sm font-medium leading-relaxed opacity-90 md:block"
+              >
+                Réglement intérieur, rapports, textes de loi
+              </p>
+            </div>
+          </div>
+        </NuxtLink>
+      </div>
+      <!-- Recent Content Sections -->
+      <div>
+        <!-- Version desktop -->
+        <div class="hidden gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
+          <!-- Latest News -->
+          <section>
+            <div class="mb-4 flex items-center justify-between">
+              <h2 class="text-xl font-bold">Actualités</h2>
+              <NuxtLink
+                to="/assemblee-nationale/actualites"
+                class="flex items-center text-sm text-blue-800 hover:text-blue-800"
+              >
+                Voir tout
+                <UIcon name="i-heroicons-arrow-right" class="ml-1 h-4 w-4" />
+              </NuxtLink>
+            </div>
+            <AssemblyHomeNews :news="news" />
+          </section>
 
-        <LayoutSubcategoryAssembly
-          :item="parliamentaryActivities"
-          title="Vie de l'assemblée"
-        />
-      </UCard>
-    </UContainer>
+          <!-- Latest Questions -->
+          <section>
+            <div class="mb-4 flex items-center justify-between">
+              <h2 class="text-xl font-bold">Questions</h2>
+              <NuxtLink
+                to="/assemblee-nationale/questions"
+                class="flex items-center text-sm text-blue-800 hover:text-blue-800"
+              >
+                Voir tout
+                <UIcon name="i-heroicons-arrow-right" class="ml-1 h-4 w-4" />
+              </NuxtLink>
+            </div>
+            <AssemblyHomeQuestions :questions="questions" />
+          </section>
+
+          <!-- Latest Votes -->
+          <section>
+            <div class="mb-4 flex items-center justify-between">
+              <h2 class="text-xl font-bold">Derniers votes</h2>
+              <NuxtLink
+                to="/assemblee-nationale/votes"
+                class="flex items-center text-sm text-blue-800 hover:text-blue-800"
+              >
+                Voir tout
+                <UIcon name="i-heroicons-arrow-right" class="ml-1 h-4 w-4" />
+              </NuxtLink>
+            </div>
+            <AssemblyHomeVotes :votes="votes" />
+          </section>
+        </div>
+
+        <!-- Version mobile avec tabs -->
+        <div class="md:hidden">
+          <UTabs
+            :items="[
+              {
+                id: 'news',
+                label: 'Actualités',
+                icon: 'i-heroicons-newspaper',
+              },
+              {
+                id: 'questions',
+                label: 'Questions',
+                icon: 'i-heroicons-question-mark-circle',
+              },
+              { id: 'votes', label: 'Votes', icon: 'i-heroicons-check-circle' },
+            ]"
+          >
+            <template #item="{ item }">
+              <!-- En-tête de section commune -->
+              <div class="mb-4 border-b border-gray-100">
+                <div class="flex items-center justify-between p-2">
+                  <!-- Titre de la section -->
+                  <h3 class="text-lg font-semibold">
+                    {{
+                      item.id === "news"
+                        ? "Les derniers  communiqués"
+                        : item.id === "questions"
+                          ? "Les questions écrites"
+                          : "Les votes récents"
+                    }}
+                  </h3>
+                  <!-- Bouton Voir tout avec style amélioré -->
+                  <NuxtLink
+                    :to="`/assemblee-nationale/${
+                      item.id === 'news'
+                        ? 'actualites'
+                        : item.id === 'questions'
+                          ? 'questions'
+                          : 'votes'
+                    }`"
+                    class="inline-flex items-center rounded-full bg-blue-50 px-4 py-1.5 text-sm font-medium text-blue-800 transition hover:bg-blue-100"
+                  >
+                    Voir tout
+                    <UIcon
+                      name="i-heroicons-arrow-right"
+                      class="ml-1.5 h-4 w-4"
+                    />
+                  </NuxtLink>
+                </div>
+              </div>
+              <!-- Contenu des sections -->
+              <template v-if="item.id === 'news'">
+                <AssemblyHomeNews :news="news" />
+              </template>
+              <template v-if="item.id === 'questions'">
+                <AssemblyHomeQuestions :questions="questions" />
+              </template>
+              <template v-if="item.id === 'votes'">
+                <AssemblyHomeVotes :votes="votes" />
+              </template>
+            </template>
+          </UTabs>
+        </div>
+      </div>
+    </main>
   </div>
 </template>

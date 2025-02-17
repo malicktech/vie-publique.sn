@@ -61,7 +61,7 @@ const filteredCommissions = computed(() => {
         <UCard
           v-for="commission in filteredCommissions"
           :key="commission.id"
-          class="rounded-none transition-all hover:shadow-lg"
+          class="rounded-lg border-none bg-gray-50 p-4 transition-all hover:bg-gray-100 hover:shadow-lg"
         >
           <NuxtLink
             :to="`/assemblee-nationale/commissions/${commission.id}`"
@@ -72,7 +72,7 @@ const filteredCommissions = computed(() => {
                 Commission N°{{ commission.id }}
               </p> -->
               <h2 class="text-lg font-medium">
-                <span class="text-blue-800">#{{ commission.id }} </span>
+                <span class="text-green-700">#{{ commission.id }} </span>
                 {{ commission.name }}
               </h2>
               <p v-if="commission.president" class="text-sm text-gray-500">

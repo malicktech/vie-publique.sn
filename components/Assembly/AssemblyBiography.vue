@@ -10,12 +10,12 @@ defineProps<ProfileHeaderProps>();
 
 <template>
   <UCard v-if="deputy">
-    <h2 class="mb-6 text-2xl font-semibold">
+    <h2 class="mb-4 text-xl font-bold">
       Qui {{ deputy.gender === "F" ? "est-elle" : "est-il" }} ?
     </h2>
     <div class="space-y-4 text-gray-700">
       <p>
-        {{ `${deputy.first_name} ${deputy.last_name.toUpperCase()}` }},
+        {{ `${deputy.first_name} ${deputy.last_name.toUpperCase()}` }}
         {{ deputy.gender === "F" ? "est une députée" : "est un député" }} du
         groupe {{ deputy.group?.name }}.
       </p>

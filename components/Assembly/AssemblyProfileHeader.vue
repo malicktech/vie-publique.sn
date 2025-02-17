@@ -19,7 +19,7 @@ defineProps<ProfileHeaderProps>();
         loading="lazy"
         fetchpriority="high"
       />
-      <img
+      <UAvatar
         v-else
         :src="
           deputy.gender === 'M'
@@ -27,19 +27,22 @@ defineProps<ProfileHeaderProps>();
             : '/adobe-default-profil-women.jpg'
         "
         :alt="deputy.first_name + ' ' + deputy.last_name"
-        class="mb-6 h-48 w-full rounded-full"
+        size="3xl"
+        class="m-4 shadow"
       />
       <h1 class="mb-2 text-xl font-bold capitalize">
-        {{ deputy.first_name }} <br />
-        {{ deputy.last_name }}
+        {{ deputy.first_name.toLowerCase() }}
+        <span class="font-bold tracking-wider">
+          {{ deputy.last_name.toUpperCase() }}
+        </span>
       </h1>
       <!-- <a href="#" class="mb-4 text-red-700 hover:underline">
         {{ deputy.electoral_list.coalition.name }}
       </a> -->
-      <div class="mb-4 flex flex-col items-center space-y-2 text-gray-600">
+      <div class="mb-2 flex flex-col items-center space-y-2 text-gray-600">
         <div class="flex items-center justify-center gap-2">
           <font-awesome-icon icon="fa-solid fa-location-dot" />
-          Né à {{ deputy.birthplace }}
+          {{ deputy.gender === "M" ? "Né" : "Née" }} à {{ deputy.birthplace }}
         </div>
         <div>
           <font-awesome-icon :icon="['fas', 'cake-candles']" />
@@ -51,7 +54,7 @@ defineProps<ProfileHeaderProps>();
         </div>
       </div>
 
-      <div class="flex items-center justify-center gap-6 pb-4">
+      <div class="flex items-center justify-center gap-6 pb-2">
         <ULink
           v-if="deputy.facebook"
           :to="deputy.facebook"

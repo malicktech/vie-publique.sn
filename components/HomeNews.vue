@@ -1,133 +1,86 @@
 <script lang="ts" setup>
-const starNews = [
-  {
-    _path: "/publications/actualites/projet-loi-de-finance-2025",
-    title: "Projet de loi de finances 2025",
-    date: "2024-12-13",
-    category: "Article",
-    image: "/images/actualites/projet-loi-finance-initiale-2025.PNG",
-  },
-  {
-    _path: "/conseil-des-ministres/conseil-des-ministres-du-11-decembre-2024",
-    title: "Conseil des ministres du 11 décembre 2024",
-    date: "2024-12-11",
-    category: "Conseil des ministres",
-    image: "/images/communique-conseil-des-ministres-5.jpg",
-  },
-  {
-    _path:
-      "/publications/actualites/discours-president-diomaye-conference-union-africaine-education-jeunesse",
-    title:
-      "Président Diomaye conférence de l’Union africaine dédiée à l’éducation",
-    date: "2024-12-10",
-    category: "Discours",
-    image:
-      "/images/actualites/discours-president-diomaye-conference-union-africaine-education-jeunesse.jpg",
-  },
-  {
-    _path: "/conseil-des-ministres/conseil-des-ministres-du-03-decembre-2024",
-    title: "Conseil des ministres du 03 decembre 2024",
-    date: "2024-12-03",
-    category: "Conseil des ministres",
-    image: "/images/conseil-des-ministres-03-decembre-2024.PNG",
-  },
-  {
-    _path: "/medias/liste-officielle",
-    title: "Liste des 112 Médias reconnus au Sénégal",
-    date: "2024-12-03",
-    category: "Article",
-    image: "/images/menu/medias-3.jpg",
-  },
-  {
-    _path: "/publications/actualites/reamenagement-du-gouvernement-sonko",
-    title: "Réaménagement du gouvernement",
-    date: "2024-12-02",
-    category: "Article",
-    image:
-      "/images/actualites/gouvernement-du-senegal-du-02-decembre-2024.webp",
-  },
-  {
-    _path: "/publications/actualites/assemblee-nationale-2024",
-    title: "Assemblé nationale, les membres du bureaux",
-    date: "2024-12-02",
-    category: "Article",
-    image: "/images/actualites/assemblee-natinale-15em-legislature-bureau.png",
-  },
-  {
-    _path: "/portraits/el-malick-ndiaye",
-    title: "Nouveau président de l'assemblée nationale",
-    date: "2024-12-02",
-    category: "Article",
-    image: "/gouvernement/ministre-malick-ndiaye.jpg",
-  },
-  {
-    _path:
-      "/publications/actualites/discours-president-diomaye-commemoration-80e-anniversaire-du-massacre-de-thiaroye",
-    title: "80e anniversaire du Massacre de Thiaroye 1944",
-    date: "2024-12-01",
-    category: "Discours",
-    image:
-      "/images/actualites/president-diomaye-commemoration-80e-anniversaire-du-massacre-de-thiaroye-2.jpg",
-  },
-  {
-    _path: "/publications/actualites/journee-nationale-daara-senegal-2024",
-    title: "Journée nationale des daaras, discours du président Diomaye",
-    date: "2024-11-28",
-    category: "Discours",
-    image: "/images/actualites/journee-nationale-daara-2024-senegal.jpeg",
-  },
-  {
-    _path:
-      "/publications/actualites/interview-president-diomaye-france-2-massacre-thiaroye",
-    title:
-      "Interview du président Diomaye à France 2 sur le massacre de Thioroye",
-    date: "2024-11-28",
-    category: "Article",
-    image:
-      "/images/actualites/interview-president-diomaye-france-2-massacre-thiaroye.jpg",
-  },
-  {
-    _path:
-      "/publications/actualites/accords-de-peche-conference-de-presse-fatou-diouf",
-    title:
-      "Accord de pêche avec l'UE, Point de presse de la ministre Dr Fatou Diouf",
-    date: "2024-11-28",
-    category: "Article",
-    image:
-      "/images/actualites/accords-de-peche-conference-de-presse-fatou-diouf.jpeg",
-  },
-  {
-    _path: "/conseil-des-ministres/conseil-des-ministres-du-27-novembre-2024",
-    title: "Conseil des ministres du 27 novembre 2024",
-    date: "2024-11-27",
-    category: "Conseil des ministres",
-    image: "/images/communique-conseil-des-ministres-5.jpg",
-  },
-  // {
-  //   _path:
-  //     "/publications/actualites/conseil-interministeriel-sur-la-campagne-de-commercialisation-agricole-2024",
-  //   title:
-  //     "Conseil interministériel sur la campagne de commercialisation agricole 2024-2025",
-  //   date: "2024-11-26",
-  //   category: "Conseil interministériel",
-  //   image:
-  //     "/images/actualites/conseil-interministeriel-sur-la-campagne-de-commercialisation-agricole-2024.jpg",
-  // },
-];
+import { useNews } from "~/composables/news/useNews";
+const { news, loading, error, fetchNews } = useNews({ featured: true });
+
+// Utiliser useRuntimeConfig pour accéder au mode dev
+const config = useRuntimeConfig();
+const isDev = process.dev; // Nuxt way to check dev mode
+
+// Log pour débugger les valeurs réactives
+// watchEffect(() => {
+//   console.log("Current state:", {
+//     loading: loading.value,
+//     error: error.value,
+//     newsLength: news.value?.length,
+//     newsContent: news.value,
+//   });
+// });
+
+// Fonction pour formater l'URL selon le nouveau format /categorie/id/slug
+const formatNewsUrl = (article: any) => {
+  if (!article) return "/actualites";
+
+  const id = article.id;
+  const slug =
+    article.slug ||
+    article.title
+      ?.toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+  // Gestion spécifique selon la catégorie
+  const categorySlug = article.category?.slug;
+
+  // Cas du conseil des ministres
+  if (categorySlug === "conseil-des-ministres") {
+    return `/conseil-des-ministres/${id}/${slug}`;
+  }
+
+  // Cas de l'assemblée nationale
+  if (categorySlug === "assemblee-nationale") {
+    return `/assemblee-nationale/actualites/${id}/${slug}`;
+  }
+
+  // Cas par défaut pour toutes les autres catégories
+  return `/actualites/${id}/${slug}`;
+};
+
+// Récupération des articles au montage du composant
+onMounted(async () => {
+  console.log("Component mounted, fetching news...");
+  await fetchNews();
+});
 </script>
 
 <template>
-  <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+  <div
+    v-if="loading"
+    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+  >
+    <div v-for="n in 3" :key="n" class="animate-pulse">
+      <div class="relative w-full">
+        <div class="aspect-[16/9] rounded-t-lg bg-gray-200"></div>
+      </div>
+      <div class="mt-4 h-4 w-3/4 rounded bg-gray-200"></div>
+      <div class="mt-2 h-3 w-1/4 rounded bg-gray-200"></div>
+    </div>
+  </div>
+
+  <div v-else-if="error" class="p-4 text-red-600">
+    Une erreur est survenue lors du chargement des actualités.
+  </div>
+
+  <div v-else class="grid grid-cols-1 gap-4 md:grid-cols-3">
     <UCard
-      v-for="item in starNews"
-      :key="item._path"
+      v-for="article in news"
+      :key="article.id"
       class="custom-shadow cursor-pointer"
     >
-      <NuxtLink :to="item._path" class="flex flex-row sm:flex-col">
+      <NuxtLink :to="formatNewsUrl(article)" class="flex flex-row sm:flex-col">
         <div class="mb-0 mr-4 w-1/3 sm:mb-4 sm:mr-0 sm:w-full">
           <NuxtImg
-            :src="item.image"
-            :alt="item.title"
+            :src="$directusImageUrl(article.cover_image, '50')"
+            :alt="article.title"
             class="h-24 w-full object-cover sm:h-48"
             loading="lazy"
             fetchpriority="high"
@@ -136,17 +89,11 @@ const starNews = [
           />
         </div>
         <div class="flex-1">
-          <!-- <div
-            class="siteweb-type my-1 inline-block bg-gray-200 px-2 py-1 text-xs text-gray-800"
-          >
-            {{ item.category }}
-          </div> -->
-
           <p class="text-sm font-semibold sm:text-base">
-            {{ item.title }}
+            {{ article.title }}
           </p>
-          <div v-if="item.date" class="text-sm text-gray-800">
-            {{ $dateformatWithDayName(item.date) }}
+          <div v-if="article.date_published" class="text-sm text-gray-800">
+            {{ $dateformatWithDayName(article.date_published) }}
           </div>
         </div>
       </NuxtLink>

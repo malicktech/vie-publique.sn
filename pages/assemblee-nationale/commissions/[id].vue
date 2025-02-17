@@ -28,6 +28,12 @@ const getBureauMembersIds = computed(() => {
     ids.push(commission.value.vice_president.id);
   if (commission.value["1st_vice_president"]?.id)
     ids.push(commission.value["1st_vice_president"].id);
+  if (commission.value["2nd_vice_president"]?.id)
+    ids.push(commission.value["2nd_vice_president"].id);
+  if (commission.value["secretary"]?.id)
+    ids.push(commission.value["secretary"].id);
+  if (commission.value["reporter"]?.id)
+    ids.push(commission.value["reporter"].id);
 
   return ids;
 });
@@ -53,17 +59,8 @@ const deputyUrl = computed((deputy: any) => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-4 py-4">
     <div class="mx-auto max-w-6xl">
-      <!-- Bouton retour -->
-      <!-- <NuxtLink
-        to="/assemblee-nationale/commissions"
-        class="mb-2 inline-flex items-center text-gray-600 hover:text-gray-800"
-      >
-        <UIcon name="i-heroicons-arrow-left" class="mr-2 h-5 w-5" />
-        Retour à la liste
-      </NuxtLink> -->
-
       <UButton
         icon="i-heroicons-arrow-left"
         variant="ghost"
@@ -86,8 +83,8 @@ const deputyUrl = computed((deputy: any) => {
       <div v-else-if="commission" class="space-y-8">
         <!-- <pre>{{ commission }}</pre> -->
         <!-- En-tête de la commission -->
-        <div class="rounded-lg bg-white p-6 shadow-sm">
-          <h1 class="mb-4 text-2xl font-bold md:text-3xl">
+        <div class="rounded-lg bg-white p-2 shadow-sm">
+          <h1 class="mb-2 text-2xl font-bold md:text-3xl">
             {{ commission.name }}
           </h1>
 
@@ -97,7 +94,7 @@ const deputyUrl = computed((deputy: any) => {
         </div>
 
         <!-- Bureau de la commission -->
-        <div class="rounded-lg bg-white p-6 shadow-sm">
+        <div class="rounded-lg bg-white p-2 shadow-sm">
           <h2 class="mb-6 text-xl font-bold">Bureau de la commission</h2>
 
           <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -113,6 +110,7 @@ const deputyUrl = computed((deputy: any) => {
                 :alt="commission.president.first_name"
                 class="h-16 w-16 rounded-full object-cover"
               />
+
               <div>
                 <div class="font-medium">
                   {{ commission.president.first_name }}
@@ -127,9 +125,21 @@ const deputyUrl = computed((deputy: any) => {
               class="flex items-center space-x-4"
             >
               <img
+                v-if="commission.vice_president.photo"
                 :src="getImageUrl(commission.vice_president.photo)"
                 :alt="commission.vice_president.first_name"
                 class="h-16 w-16 rounded-full object-cover"
+              />
+              <UAvatar
+                v-else
+                :src="
+                  commission.vice_president.gender === 'M'
+                    ? '/adobe-default-profil-man.jpg'
+                    : '/adobe-default-profil-women.jpg'
+                "
+                alt="Default image"
+                size="3xl"
+                class="m-4 shadow-md"
               />
               <div>
                 <div class="font-medium">
@@ -148,9 +158,21 @@ const deputyUrl = computed((deputy: any) => {
               class="flex items-center space-x-4"
             >
               <img
+                v-if="commission['1st_vice_president'].photo"
                 :src="getImageUrl(commission['1st_vice_president'].photo)"
                 :alt="commission['1st_vice_president'].first_name"
                 class="h-16 w-16 rounded-full object-cover"
+              />
+              <UAvatar
+                v-else
+                :src="
+                  commission['1st_vice_president'].gender === 'M'
+                    ? '/adobe-default-profil-man.jpg'
+                    : '/adobe-default-profil-women.jpg'
+                "
+                alt="Default image"
+                size="3xl"
+                class="m-4 shadow-md"
               />
               <div>
                 <div class="font-medium">

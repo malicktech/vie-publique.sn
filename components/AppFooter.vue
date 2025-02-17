@@ -22,7 +22,7 @@ const linksSocial = [
 const links = [
   {
     label: "À Propos",
-    to: "/about/us",
+    to: "/a-propos/qui-sommes-nous",
   },
   {
     label: "Contact",
@@ -38,7 +38,11 @@ const links = [
   },
   {
     label: "Recrutement",
-    to: "/publications/recrutement",
+    to: "/a-propos/recrutement",
+  },
+  {
+    label: "Partenariat",
+    to: "/a-propos/travailler-avec-nous",
   },
 ];
 </script>

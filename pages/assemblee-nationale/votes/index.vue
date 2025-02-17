@@ -65,14 +65,12 @@
             <div class="flex h-full flex-col p-0">
               <!-- Header: Date et Status -->
               <div class="mb-4 flex items-center justify-between">
-                <UBadge
-                  color="green"
-                  variant="soft"
-                  size="lg"
-                  class="font-medium"
+                <span
+                  class="rounded-full bg-gray-50 px-2 py-1 text-xs text-gray-600"
                 >
                   {{ $getAssemblyVoteLabel(vote.type) }}
-                </UBadge>
+                </span>
+
                 <UBadge
                   :color="vote.status === 'adopted' ? 'emerald' : 'red'"
                   class="font-medium uppercase"
@@ -89,7 +87,7 @@
               <!-- Tag catégorie -->
               <div>
                 <span class="text-sm text-gray-500">
-                  {{ formatDate(vote.date) }}
+                  {{ $dateformat(vote.date) }}
                 </span>
               </div>
             </div>
@@ -108,13 +106,13 @@ onMounted(() => {
   fetchAssemblyVotes();
 });
 
-const formatDate = (date: string) => {
-  return new Date(date).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
+// const formatDate = (date: string) => {
+//   return new Date(date).toLocaleDateString("fr-FR", {
+//     day: "numeric",
+//     month: "long",
+//     year: "numeric",
+//   });
+// };
 
 const getBgColor = (voteType: string): string => {
   const colors: Record<string, string> = {

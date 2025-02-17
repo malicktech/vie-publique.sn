@@ -29,14 +29,14 @@ const menuCategories = [
     title: "Annuaire Médias",
     description: "Liste des Médias reconnus",
     icon: "i-heroicons-tv",
-    to: "/medias/liste-officielle",
+    to: "/medias",
     color: "bg-red-100 text-red-700",
   },
   {
     title: "Aide à la presses",
     description: "Fond d'aide à la presse",
     icon: "i-heroicons-radio",
-    to: "/medias",
+    to: "/medias/aide-presse",
     color: "bg-red-100 text-red-700",
   },
   {
@@ -57,9 +57,7 @@ const menuCategories = [
 </script>
 
 <template>
-  <div class="container mx-auto p-2 sm:p-4">
-    <!-- <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Documents</h1> -->
-
+  <div class="container mx-auto px-4">
     <div class="prose prose-sm sm:prose mx-auto my-2">
       <h1 class="text-center">Annuaires</h1>
     </div>

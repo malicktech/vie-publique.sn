@@ -9,18 +9,19 @@ export const useAssemblyQuestions = () => {
     loading.value = true;
     error.value = null;
 
-    // const fields = "";
-
     console.log(
       "fetchAssemblyQuestions " + useRuntimeConfig().public.cmsApiUrl,
     );
 
+    const sort = `sort=-question_date`;
+
+    const filters = `filter[status]=published`;
     const fields =
       "id,subject,question_date,deputy.id,deputy.first_name,deputy.last_name,deputy.photo";
     try {
       const config = useRuntimeConfig();
       const response = await fetch(
-        `${config.public.cmsApiUrl}/items/assembly_question?fields=${fields}`,
+        `${config.public.cmsApiUrl}/items/assembly_question?fields=${fields}&${sort}&${filters}`,
         {
           headers: {
             Authorization: `Bearer ${config.public.cmsApiKey}`,

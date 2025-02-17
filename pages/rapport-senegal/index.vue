@@ -35,7 +35,7 @@ const filteredRapports = computed(() =>
 
 onMounted(async () => {
   rapports.value = (
-    await import("@/assets/data/rapports-liste.json")
+    await import("@/assets/data/rapport/rapports-liste.json")
   ).default.sort(
     (a, b) =>
       new Date(b.date_publication).getTime() -
@@ -64,7 +64,7 @@ watch(selectedOrganisme, () => {
 <template>
   <div class="flex flex-col items-center px-4">
     <h1 class="sr-only">
-      Rapports d'audits publics Sénégal OFNAC Cours des comptes IGE CENTIF
+      Rapports d'audits publics Sénégal OFNAC Cour des comptes IGE CENTIF
     </h1>
 
     <div class="prose prose-sm sm:prose mx-auto my-2">

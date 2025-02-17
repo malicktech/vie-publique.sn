@@ -14,7 +14,7 @@ En prélude aux célébrations du 80e anniversaire du Massacre de Thiaroye, le P
 
 Regardez l'interview complet ici dessous :
 
-<iframe width="100%" height="315" src="https://www.youtube.com/embed/GoCuhOHmfe0?rel=0&modestbranding=1&origin=https://www.vie-publique.sn" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe class="video" width="100%" height="315" src="https://www.youtube.com/embed/GoCuhOHmfe0?rel=0&modestbranding=1&origin=https://www.vie-publique.sn" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 Ces échanges ont porté sur la mémoire historique, la reconnaissance des sacrifices des tirailleurs sénégalais, ainsi que sur les grandes questions d’actualité internationale.
 

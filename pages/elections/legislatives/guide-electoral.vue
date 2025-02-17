@@ -68,7 +68,7 @@
       >
         <iframe
           :src="video.url.replace('watch?v=', 'embed/')"
-          class="h-48 w-full rounded-lg"
+          class="video h-48 w-full rounded-lg"
           frameborder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowfullscreen

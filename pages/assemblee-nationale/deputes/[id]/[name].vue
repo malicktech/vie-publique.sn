@@ -1,10 +1,11 @@
 <!-- pages/deputes/[id].vue -->
 <template>
-  <div class="container mx-auto px-4 py-8">
+  <div class="container mx-auto px-4 py-4">
     <UButton
       icon="i-heroicons-arrow-left"
+      class="mb-2"
       variant="ghost"
-      label="Retour à la liste"
+      label="Retour"
       color="gray"
       @click.native="router.back()"
     />
@@ -29,31 +30,66 @@
       </div>
 
       <div class="flex w-full flex-col gap-5 md:w-2/3">
+        <!-- VOTES -->
         <!-- <MotionVote
           :title="lastVote?.motion?.title"
           :description="lastVote?.motion?.description"
         /> -->
-        <AssemblyBiography :deputy="deputy" />
         <!-- <RecentVotes :votes="deputy?.votes" /> -->
 
+        <!-- BIO -->
+        <AssemblyBiography :deputy="deputy" />
+
+        <!-- COMMISSIONS -->
         <UCard v-if="deputiesCommissions.length">
-          <h2 class="text-xl font-semibold">Commissions</h2>
+          <h2 class="mb-4 text-xl font-bold">Commissions</h2>
+
+          <div v-if="deputiesCommissionsFiltered.length === 0">
+            <p class="text-sm text-gray-500">Aucune commission</p>
+          </div>
+          <div v-else>
+            <p class="my-4 text-sm text-gray-500">
+              Membres des commissions suivantes:
+            </p>
+
+            <div
+              v-for="commission in deputiesCommissionsFiltered"
+              :key="commission.assembly_commission_id.id"
+              class="transition-all hover:shadow-lg"
+            >
+              <NuxtLink
+                :to="`/assemblee-nationale/commissions/${commission.assembly_commission_id.id}`"
+              >
+                <ul class="flex gap-4">
+                  <li class="mb-2 text-sm underline">
+                    <UIcon
+                      name="i-heroicons-arrow-top-right-on-square"
+                      size="sm"
+                    />
+                    {{ commission.assembly_commission_id.name }}
+                  </li>
+                </ul>
+              </NuxtLink>
+            </div>
+          </div>
+        </UCard>
+
+        <!-- QUESTIONS ECRITES -->
+        <AssemblyDeputyQuestion :deputy="deputy" />
+        <!-- <UCard v-if="deputy.questions.length">
+          <h2 class="text-xl font-semibold">Questions écrites</h2>
           <div
-            v-for="commission in deputiesCommissionsFiltered"
-            :key="commission.assembly_commission_id.id"
+            v-for="question in deputy.questions"
+            :key="question.id"
             class="transition-all hover:shadow-lg"
           >
-            <NuxtLink
-              :to="`/assemblee-nationale/commissions/${commission.assembly_commission_id.id}`"
-            >
+            <NuxtLink :to="`/assemblee-nationale/questions/${question.id}`">
               <ul class="flex gap-4">
-                <li class="mb-2 text-sm underline">
-                  {{ commission.assembly_commission_id.name }}
-                </li>
+                <li class="mb-2 text-sm underline">{{ question.title }}</li>
               </ul>
             </NuxtLink>
           </div>
-        </UCard>
+          </UCard>-->
       </div>
     </div>
 
@@ -123,4 +159,53 @@ function setupSEO() {
     ],
   });
 }
+
+onMounted(async () => {
+  // Attendre que deputy soit chargé
+  await nextTick();
+
+  // Configuration SEO une fois deputy chargé
+  useHead({
+    title: computed(() =>
+      deputy
+        ? `${deputy.first_name} ${deputy.last_name} - Député`
+        : "Chargement...",
+    ),
+    meta: [
+      {
+        name: "description",
+        content: computed(() =>
+          deputy
+            ? `Découvrez le profil et l'activité parlementaire de ${deputy.first_name} ${deputy.last_name}, député ${deputy.electoral_list.name}`
+            : "",
+        ),
+      },
+    ],
+  });
+});
+
+// Liste des routes valides pour le retour
+const validReturnPaths = [
+  "/assemblee-nationale/deputes",
+  "/assemblee-nationale/commissions",
+  "/assemblee-nationale/bureau",
+  "/assemblee-nationale/groupes",
+];
+
+// Gestion du retour
+const handleReturn = () => {
+  // Vérifie si on a un referer dans l'historique de navigation
+  const previousRoute = router.options.history.state.back;
+
+  // Si on a un referer et qu'il fait partie des routes valides
+  if (
+    previousRoute &&
+    validReturnPaths.some((path) => previousRoute.startsWith(path))
+  ) {
+    router.back();
+  } else {
+    // Sinon, redirection vers la liste des députés par défaut
+    router.push("/assemblee-nationale/deputes");
+  }
+};
 </script>

@@ -12,7 +12,7 @@ image: "/images/actualites/president-diomaye-commemoration-80e-anniversaire-du-m
 
 Le Sénégal a commémoré ce 1er décembre 2024 le 80e anniversaire du massacre de Thiaroye, un événement tragique de son histoire. La cérémonie, présidée par le Président Bassirou Diomaye Faye, a rassemblé des dirigeants africains, des membres du gouvernement et des invités venus du monde entier.
 
-<iframe width="100%" height="315" src="https://www.youtube.com/embed/yvktNzAPkLQ?rel=0&modestbranding=1&origin=https://www.vie-publique.sn" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+<iframe class="video" width="100%" height="315" src="https://www.youtube.com/embed/yvktNzAPkLQ?rel=0&modestbranding=1&origin=https://www.vie-publique.sn" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 Le Président Faye, accompagné de ses homologues, a déposé des gerbes de fleurs au cimetière de Thiaroye, suivi d’une visite au mémorial dédié aux tirailleurs sénégalais et malgaches, où le Professeur Mamadou Koné a présenté une exposition intitulée “Thiaroye 44 : une mémoire blessée”.
 
