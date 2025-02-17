@@ -107,6 +107,7 @@ defineShortcuts({
   >
     <!-- PWA manifest -->
     <NuxtPwaManifest />
+
     <!-- loader quand on change de page -->
     <NuxtLoadingIndicator />
 
@@ -119,13 +120,6 @@ defineShortcuts({
     </ClientOnly>
 
     <Toaster position="bottom-center" />
-
-    <!-- Navigation horizontale pour les écrans plus larges -->
-    <UHorizontalNavigation
-      :links="links"
-      class="hidden w-auto items-center md:flex"
-    >
-    </UHorizontalNavigation>
 
     <!-- Menu pour mobiles (toggle visibility with Tailwind CSS) -->
     <UButton
@@ -191,7 +185,6 @@ defineShortcuts({
 
 <style>
 .second-header {
-  background-color: #ffff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -215,5 +208,9 @@ nav ul li a span {
 
 .vertical-nav {
   background-color: transparent;
+}
+.header_top {
+  background: linear-gradient(90deg, #0000d3 0%, #010272);
+  /* background: linear-gradient(90deg, #000000 0%, #3533cd); */
 }
 </style>
