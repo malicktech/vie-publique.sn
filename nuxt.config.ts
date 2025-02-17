@@ -9,7 +9,6 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "nuxt-gtag",
     "@nuxtjs/seo",
-    "@nuxtjs/sitemap",
     "@nuxtjs/web-vitals",
     "@nuxt/image",
     "@vueuse/motion/nuxt",
@@ -36,6 +35,7 @@ export default defineNuxtConfig({
       sunuElectionApiUrl: process.env.SUNU_ELECTION_API_URL,
       sunuElectionApiKey: process.env.SUNU_ELECTION_API_KEY,
       fbPixelId: process.env.FACEBOOK_PIXEL_ID || "",
+      maintenanceMode: process.env.NUXT_PUBLIC_MAINTENANCE_MODE === "true",
       redirects: [
         { from: "^/reports(.*)", to: "/rapport-senegal$1" },
         { from: "^/budget-etat-senegal(.*)", to: "/budget-senegal$1" },

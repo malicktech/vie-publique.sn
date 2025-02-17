@@ -16,7 +16,7 @@ Plateforme Web citoyenne dédiée à la promotion de la transparence et de l'acc
 C'est une plateforme participative, collective, ouverte et open source visant à rendre accessible au grand public les informations publiques (rapports d'audit, budget, journal officiel, lois et règlements, code général, nominations etc.).
 
 > ⚠️ **AVERTISSEMENT IMPORTANT**  
-> Projet initié dans l'urgence pour répondre à [l'indisponiblité du site de la cours des comptes le 01/05/2024]. Les data (metadata sur les rapports et les pdf) on été incluses directement dans le repo git. Ce point sera corrigé très rapidement en séparant les data du code.
+> Projet initié dans l'urgence pour répondre à [l'indisponiblité du site de la cours des comptes le 01/05/2024](https://twitter.com/malick_yacine/status/1785472745150742983). Les data (metadata sur les rapports et les pdf) on été incluses directement dans le repo git. Ce point sera corrigé très rapidement en séparant les data du code.
 
 ## 🗺️ Roadmap
 
