@@ -1,7 +1,5 @@
 import tailwindTypography from "@tailwindcss/typography";
-import { env } from "node:process";
 
-const sw = env.SW === "true";
 export default defineNuxtConfig({
   ssr: true,
   modules: [
@@ -175,9 +173,9 @@ export default defineNuxtConfig({
     },
   },
   pwa: {
-    strategies: sw ? "injectManifest" : "generateSW",
-    srcDir: sw ? "service-worker" : undefined,
-    filename: sw ? "sw.ts" : undefined,
+    strategies: process.env.SW ? "injectManifest" : "generateSW",
+    srcDir: process.env.SW ? "service-worker" : undefined,
+    filename: process.env.SW ? "sw.ts" : undefined,
     registerType: "autoUpdate",
     manifest: {
       name: "Vie Publique SN",
