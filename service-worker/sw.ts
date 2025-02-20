@@ -13,46 +13,50 @@ import { ExpirationPlugin } from "workbox-expiration";
 
 declare let self: ServiceWorkerGlobalScope;
 
-// self.__WB_MANIFEST is default injection point
-const entries = self.__WB_MANIFEST
-if (import.meta.env.DEV)
-  entries.push({ url: '/', revision: Date.now().toString() });
+// self.__WB_MANIFEST est le point d'injection par défaut
+const entries = self.__WB_MANIFEST;
 
-precacheAndRoute(entries)
+const rootEntry = { url: '/', revision: null };
+if (!entries.some(entry => entry.url === '/')) {
+  entries.push(rootEntry);
+}
 
-// clean old assets
-cleanupOutdatedCaches()
+precacheAndRoute(entries);
+
+cleanupOutdatedCaches();
 
 let allowlist: undefined | RegExp[];
-if (import.meta.env.DEV) allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
+if (import.meta.env.DEV) {
+  allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
+} else {
+  allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
+}
 
-// to allow work offline
+// Configuration pour le offline
 if (import.meta.env.PROD) {
-  // include webmanifest cache
+  // Cache du manifest
   registerRoute(
-    ({ request, sameOrigin }) =>
-      sameOrigin && request.destination === 'manifest',
+    ({ request, sameOrigin }) => sameOrigin && request.destination === 'manifest',
     new NetworkFirst({
       cacheName: 'vpsn-webmanifest',
       plugins: [
         new CacheableResponsePlugin({ statuses: [200] }),
-        // we only need a few entries
         new ExpirationPlugin({ maxEntries: 100 }),
       ],
-    }),
-  )
+    })
+  );
 
-  // Cache des API avec stratégie "Network First"
+  // Cache des API
   registerRoute(
     ({ url }) => url.pathname.startsWith('/items/'),
     new NetworkFirst({
       cacheName: 'api-cache',
       plugins: [
         new CacheableResponsePlugin({ statuses: [200] }),
-        new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 3600 }), // 1h
+        new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 3600 }),
       ],
     })
-  )
+  );
 
   // Cache des images locales
   registerRoute(
@@ -60,16 +64,16 @@ if (import.meta.env.PROD) {
     new CacheFirst({
       cacheName: 'images-cache',
       plugins: [
-        new CacheableResponsePlugin({ statuses: [200] }), // Seules les réponses 200
+        new CacheableResponsePlugin({ statuses: [200] }),
         new ExpirationPlugin({
-          maxEntries: 100, // Limite de stockage
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 jours
+          maxEntries: 100,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         }),
       ],
     })
-  )
+  );
 
-  // Cache des images du CMS
+  // Cache des assets du CMS
   registerRoute(
     ({ url }) => 
       url.origin === 'https://cms.vie-publique.sn' && 
@@ -77,20 +81,27 @@ if (import.meta.env.PROD) {
     new StaleWhileRevalidate({
       cacheName: 'cms-assets-images',
       plugins: [
-        new CacheableResponsePlugin({ statuses: [200] }), // Uniquement les réponses 200 OK
+        new CacheableResponsePlugin({ statuses: [200] }),
         new ExpirationPlugin({
-          maxEntries: 200, // Limite le nombre d'images stockées
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 jours de cache
+          maxEntries: 200,
+          maxAgeSeconds: 30 * 24 * 60 * 60,
         }),
       ],
     })
-  )
+  );
 }
-registerRoute(new NavigationRoute(
-  createHandlerBoundToURL('/'),
-  { allowlist },
-));
 
+registerRoute(
+  new NavigationRoute(
+    new NetworkFirst({
+      cacheName: 'html-cache',
+      plugins: [
+        new CacheableResponsePlugin({ statuses: [200] }),
+      ],
+    }),
+    { allowlist }
+  )
+);
 
 self.skipWaiting();
 clientsClaim();

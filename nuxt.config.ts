@@ -179,7 +179,7 @@ export default defineNuxtConfig({
     registerType: "autoUpdate",
     manifest: {
       name: "Vie Publique SN",
-      short_name: "ViePuliqueSN",
+      short_name: "ViePubliqueSN",
       start_url: "/?utm_medium=PWA&utm_source=launcher",
       id: "/?utm_medium=PWA&utm_source=launcher",
       display: "standalone",
@@ -289,22 +289,21 @@ export default defineNuxtConfig({
     },
     workbox: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
-      maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
+      maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
+      navigateFallback: "/",
+      navigateFallbackAllowlist: [/^\/$/, /^\/budget-senegal(\/.*)?$/],
     },
     injectManifest: {
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
-      maximumFileSizeToCacheInBytes: 50 * 1024 * 1024, // 50MB
+      maximumFileSizeToCacheInBytes: 50 * 1024 * 1024,
     },
     client: {
       installPrompt: true,
-      // if enabling periodic sync for update use 1 hour or so (periodicSyncForUpdates: 3600)
-      periodicSyncForUpdates: 20,
+      periodicSyncForUpdates: 3600,
     },
     devOptions: {
       enabled: true,
-      suppressWarnings: true,
-      navigateFallback: "/",
-      navigateFallbackAllowlist: [/^\/$/],
+      suppressWarnings: false,
       type: "module",
     },
   },
