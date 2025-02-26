@@ -183,7 +183,7 @@ export default defineNuxtConfig({
       start_url: "/?utm_medium=PWA&utm_source=launcher",
       id: "/?utm_medium=PWA&utm_source=launcher",
       display: "standalone",
-      orientation: "any",
+      orientation: "portrait",
       background_color: "#fff",
       theme_color: "#ffffff",
       icons: [

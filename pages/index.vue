@@ -74,7 +74,7 @@ const navigationCards = [
       <!-- <PartnersSection /> -->
       <!-- <PartnersSection2 /> -->
 
-      <div class="mt-4 text-center text-sm text-gray-500 sm:px-8">
+      <div class="mb-8 mt-4 text-center text-sm text-gray-500 sm:px-8">
         🛈 Vie-Publique est tenu par des bénévoles <br />
         si vous voyez une erreur merci de nous aider à corriger
       </div>

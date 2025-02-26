@@ -89,19 +89,19 @@ if (import.meta.env.PROD) {
       ],
     })
   );
-}
 
-registerRoute(
-  new NavigationRoute(
-    new NetworkFirst({
-      cacheName: 'html-cache',
-      plugins: [
-        new CacheableResponsePlugin({ statuses: [200] }),
-      ],
-    }),
-    { allowlist }
-  )
-);
+  registerRoute(
+    new NavigationRoute(
+      new NetworkFirst({
+        cacheName: 'html-cache',
+        plugins: [
+          new CacheableResponsePlugin({ statuses: [200] }),
+        ],
+      }),
+      { allowlist }
+    )
+  );
+}
 
 self.skipWaiting();
 clientsClaim();

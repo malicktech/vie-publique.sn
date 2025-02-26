@@ -50,7 +50,7 @@ const links = [
 <template>
   <div class="mt-5 h-px w-full bg-gray-200 dark:bg-gray-800"></div>
 
-  <footer class="relative mx-auto py-8 sm:px-6 lg:px-8 lg:py-4">
+  <footer class="relative mx-auto hidden py-8 sm:px-6 md:block lg:px-8 lg:py-4">
     <!-- Social Links Row -->
     <div class="flex items-center justify-center gap-6 pb-4">
       <ULink
