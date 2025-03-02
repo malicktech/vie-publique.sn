@@ -40,9 +40,9 @@ cleanupOutdatedCaches();
 // Définir les routes à mettre en cache
 let allowlist: undefined | RegExp[];
 if (import.meta.env.DEV) {
-  allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
+  allowlist = [/.*/];
 } else {
-  allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
+  allowlist = [/.*/];
 }
 
 // Configuration pour le offline
@@ -267,7 +267,5 @@ self.addEventListener('notificationclose', event => {
   // Vous pouvez ajouter une logique d'analyse ici si nécessaire
 });
 
-// Ne pas activer automatiquement pour permettre à l'utilisateur 
-// de contrôler quand la mise à jour se produit
-// self.skipWaiting(); // Commenté pour permettre la gestion manuelle des mises à jour
-// clientsClaim(); // Commenté car déjà géré dans l'événement 'activate'
+// self.skipWaiting(); // pour permettre la gestion manuelle des mises à jour
+// clientsClaim(); // déjà géré dans l'événement 'activate'
