@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Toaster, toast } from "vue-sonner";
-const { $pwa } = useNuxtApp();
 const isOpen = ref(false);
 // Appliquer le middleware globalement
 definePageMeta({
@@ -81,15 +80,45 @@ const aboutUslinks = [
 ];
 
 onMounted(() => {
-  if ($pwa?.needRefresh) {
-    toast("Nouvelle version trouvée. Actualiser pour mettre à jour.", {
-      action: {
-        label: "Recharger",
-        onClick: () => location.reload(),
-      },
+  if (import.meta.client && "serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("controllerchange", () => {});
+
+    navigator.serviceWorker.ready.then((registration) => {
+      // Vérifier si une mise à jour est disponible immédiatement
+      if (registration.waiting) {
+        toast("Nouvelle version trouvée. Actualiser pour mettre à jour.", {
+          action: {
+            label: "Recharger",
+            onClick: () => location.reload(),
+          },
+        });
+      }
+
+      registration.addEventListener("updatefound", () => {
+        const newWorker = registration.installing;
+        if (newWorker) {
+          newWorker.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              toast(
+                "Nouvelle version trouvée. Actualiser pour mettre à jour.",
+                {
+                  action: {
+                    label: "Recharger",
+                    onClick: () => location.reload(),
+                  },
+                },
+              );
+            }
+          });
+        }
+      });
     });
   }
 });
+
 defineShortcuts({
   escape: () => navigateTo("/"),
   "/": () => navigateTo("/"),

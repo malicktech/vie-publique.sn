@@ -12,6 +12,14 @@ import { CacheableResponsePlugin } from "workbox-cacheable-response";
 import { ExpirationPlugin } from "workbox-expiration";
 
 declare let self: ServiceWorkerGlobalScope;
+const WORKBOX_CACHES = [
+  'html-cache',
+  'vpsn-webmanifest',
+  'api-cache',
+  'images-cache',
+  'cms-assets-images',
+  'workbox-precache',
+];
 
 // self.__WB_MANIFEST est le point d'injection par défaut
 const entries = self.__WB_MANIFEST;
@@ -101,7 +109,110 @@ if (import.meta.env.PROD) {
       { allowlist }
     )
   );
+
+  registerRoute(
+    ({url}) => url.host.startsWith('fonts.g'),
+    new CacheFirst({
+      cacheName: 'google-fonts',
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 30,
+        }),
+        new CacheableResponsePlugin({
+          statuses: [0, 200]
+        }),
+      ],
+    })
+  );
 }
+
+// Gestion des mises à jour
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => Promise.all(
+      cacheNames.map(cacheName => {
+        if (!WORKBOX_CACHES.includes(cacheName)) {
+          return caches.delete(cacheName);
+        }
+      })
+    )).then(() => self.clients.claim())
+  );
+});
+
+// Communication avec le client
+self.addEventListener('message', (event) => {
+  if (event.data === 'skipWaiting') {
+    self.skipWaiting();
+    self.clients.claim().then(() => {
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => client.postMessage('reload'));
+      });
+    });
+  }
+});
+
+/*
+  events - push
+*/
+
+self.addEventListener('push', event => {
+  console.log('Push message received:', event)
+  if (event.data) {
+    let data = JSON.parse(event.data.text())
+    event.waitUntil(
+      self.registration.showNotification(
+        data.title,
+        {
+          body: data.body,
+          icon: '/pwa-192x192.png',
+          badge: '/pwa-192x192.png',
+          image: data.imageUrl,
+          data: {
+            openUrl: data.openUrl
+          }
+        }
+      )
+    )
+  }
+})
+
+/*
+events - notifications
+*/
+
+self.addEventListener('notificationclick', event => {
+  let notification = event.notification
+  let action = event.action
+
+  if (action == 'ramadan') {
+    console.log('Ramadan button was clicked')
+  }
+  else if (action == 'goodbye') {
+    console.log('Goodbye button was clicked')
+  }
+  else {
+    event.waitUntil(
+      self.clients.matchAll().then(clis => {
+        let clientUsingApp = clis.find(cli => {
+          return cli.visibilityState === 'visible'
+        })
+        if (clientUsingApp) {
+          clientUsingApp.navigate(notification.data.openUrl)
+          clientUsingApp.focus()
+        }
+        else {
+          self.clients.openWindow(notification.data.openUrl)
+        }
+      })
+    ) 
+  }
+  notification.close()
+})
+
+self.addEventListener('notificationclose', event => {
+  console.log('Notification was closed', event)
+})
+
 
 self.skipWaiting();
 clientsClaim();

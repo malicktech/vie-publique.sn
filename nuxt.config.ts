@@ -291,6 +291,10 @@ export default defineNuxtConfig({
       globPatterns: ["**/*.{js,css,html,png,svg,ico}"],
       maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
       navigateFallback: "/",
+      cleanupOutdatedCaches: true,
+      clientsClaim: true,
+      skipWaiting: true,
+      version: Date.now().toString(),
       navigateFallbackAllowlist: [/^\/$/, /^\/budget-senegal(\/.*)?$/],
     },
     injectManifest: {
