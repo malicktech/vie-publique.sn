@@ -19,20 +19,25 @@ const WORKBOX_CACHES = [
   'images-cache',
   'cms-assets-images',
   'workbox-precache',
+  'google-fonts',
 ];
 
 // self.__WB_MANIFEST est le point d'injection par défaut
 const entries = self.__WB_MANIFEST;
 
+// Assurer que la route racine est incluse dans le précache
 const rootEntry = { url: '/', revision: null };
 if (!entries.some(entry => entry.url === '/')) {
   entries.push(rootEntry);
 }
 
+// Précacher les routes essentielles
 precacheAndRoute(entries);
 
+// Nettoyer les anciens caches
 cleanupOutdatedCaches();
 
+// Définir les routes à mettre en cache
 let allowlist: undefined | RegExp[];
 if (import.meta.env.DEV) {
   allowlist = [/^\/$/, /^\/budget-senegal(\/.*)?$/];
@@ -54,7 +59,7 @@ if (import.meta.env.PROD) {
     })
   );
 
-  // Cache des API
+  // Cache des API avec timeout
   registerRoute(
     ({ url }) => url.pathname.startsWith('/items/'),
     new NetworkFirst({
@@ -63,6 +68,7 @@ if (import.meta.env.PROD) {
         new CacheableResponsePlugin({ statuses: [200] }),
         new ExpirationPlugin({ maxEntries: 100, maxAgeSeconds: 3600 }),
       ],
+      networkTimeoutSeconds: 5, // Timeout pour éviter d'attendre trop longtemps
     })
   );
 
@@ -75,7 +81,7 @@ if (import.meta.env.PROD) {
         new CacheableResponsePlugin({ statuses: [200] }),
         new ExpirationPlugin({
           maxEntries: 100,
-          maxAgeSeconds: 30 * 24 * 60 * 60,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 jours
         }),
       ],
     })
@@ -92,12 +98,13 @@ if (import.meta.env.PROD) {
         new CacheableResponsePlugin({ statuses: [200] }),
         new ExpirationPlugin({
           maxEntries: 200,
-          maxAgeSeconds: 30 * 24 * 60 * 60,
+          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 jours
         }),
       ],
     })
   );
 
+  // Navigation principale
   registerRoute(
     new NavigationRoute(
       new NetworkFirst({
@@ -105,11 +112,13 @@ if (import.meta.env.PROD) {
         plugins: [
           new CacheableResponsePlugin({ statuses: [200] }),
         ],
+        networkTimeoutSeconds: 3, // Timeout pour les navigations
       }),
       { allowlist }
     )
   );
 
+  // Google Fonts
   registerRoute(
     ({url}) => url.host.startsWith('fonts.g'),
     new CacheFirst({
@@ -117,6 +126,7 @@ if (import.meta.env.PROD) {
       plugins: [
         new ExpirationPlugin({
           maxEntries: 30,
+          maxAgeSeconds: 60 * 24 * 60 * 60, // 60 jours
         }),
         new CacheableResponsePlugin({
           statuses: [0, 200]
@@ -132,87 +142,132 @@ self.addEventListener('activate', (event) => {
     caches.keys().then(cacheNames => Promise.all(
       cacheNames.map(cacheName => {
         if (!WORKBOX_CACHES.includes(cacheName)) {
+          console.log('Suppression du cache obsolète:', cacheName);
           return caches.delete(cacheName);
         }
       })
-    )).then(() => self.clients.claim())
+    )).then(() => {
+      console.log('Service Worker activé et caches nettoyés');
+      return self.clients.claim();
+    })
   );
 });
 
 // Communication avec le client
 self.addEventListener('message', (event) => {
   if (event.data === 'skipWaiting') {
+    console.log('skipWaiting reçu, activation du nouveau Service Worker...');
     self.skipWaiting();
     self.clients.claim().then(() => {
       self.clients.matchAll().then(clients => {
-        clients.forEach(client => client.postMessage('reload'));
+        // Utiliser Array.from pour résoudre le problème TypeScript avec find()
+        const clientsArray = Array.from(clients);
+        console.log(`Notification de ${clientsArray.length} clients pour rechargement`);
+        clientsArray.forEach(client => client.postMessage('reload'));
       });
     });
   }
 });
 
 /*
-  events - push
+  Gestion des événements push
 */
-
 self.addEventListener('push', event => {
-  console.log('Push message received:', event)
+  console.log('Push message received:', event);
   if (event.data) {
-    let data = JSON.parse(event.data.text())
-    event.waitUntil(
-      self.registration.showNotification(
-        data.title,
-        {
-          body: data.body,
-          icon: '/pwa-192x192.png',
-          badge: '/pwa-192x192.png',
-          image: data.imageUrl,
-          data: {
-            openUrl: data.openUrl
+    try {
+      let data = JSON.parse(event.data.text());
+      
+      // Valider que les champs obligatoires sont présents
+      if (!data.title) {
+        throw new Error('Le titre de la notification est manquant');
+      }
+      
+      // Afficher la notification
+      event.waitUntil(
+        self.registration.showNotification(
+          data.title,
+          {
+            body: data.body || 'Nouvelle notification',
+            icon: '/pwa-192x192.png',
+            badge: '/pwa-192x192.png',
+            image: data.imageUrl,
+            vibrate: [100, 50, 100, 50, 100],
+            sound: data.sound,
+            requireInteraction: data.requireInteraction || false,
+            actions: [
+              ...(data.actions || []),
+              { action: 'close', title: 'Fermer' }
+            ],
+            data: {
+              openUrl: data.openUrl || '/',
+              timestamp: new Date().getTime()
+            }
           }
-        }
-      )
-    )
+        )
+      );
+    } catch (error) {
+      console.error('Erreur lors du traitement du message push:', error);
+      // Afficher une notification générique en cas d'erreur
+      event.waitUntil(
+        self.registration.showNotification(
+          'Nouvelle notification',
+          {
+            body: 'Impossible de traiter les détails de la notification',
+            icon: '/pwa-192x192.png',
+            badge: '/pwa-192x192.png'
+          }
+        )
+      );
+    }
   }
-})
+});
 
 /*
-events - notifications
+  Gestion des événements de notification
 */
-
 self.addEventListener('notificationclick', event => {
-  let notification = event.notification
-  let action = event.action
+  const notification = event.notification;
+  const action = event.action;
 
-  if (action == 'ramadan') {
-    console.log('Ramadan button was clicked')
+  console.log('Notification cliquée', action);
+  
+  if (action === 'ramadan') {
+    console.log('Action Ramadan cliquée');
   }
-  else if (action == 'goodbye') {
-    console.log('Goodbye button was clicked')
+  else if (action === 'close') {
+    console.log('Notification fermée par l\'utilisateur');
   }
   else {
+    // Ouvrir l'URL associée
     event.waitUntil(
-      self.clients.matchAll().then(clis => {
-        let clientUsingApp = clis.find(cli => {
-          return cli.visibilityState === 'visible'
-        })
+      self.clients.matchAll().then(clients => {
+        const clientsArray = Array.from(clients);
+        
+        const clientUsingApp = clientsArray.find(cli => {
+          return cli.visibilityState === 'visible';
+        });
+        
         if (clientUsingApp) {
-          clientUsingApp.navigate(notification.data.openUrl)
-          clientUsingApp.focus()
+          clientUsingApp.navigate(notification.data.openUrl);
+          clientUsingApp.focus();
         }
         else {
-          self.clients.openWindow(notification.data.openUrl)
+          self.clients.openWindow(notification.data.openUrl);
         }
       })
-    ) 
+    );
   }
-  notification.close()
-})
+  
+  notification.close();
+});
 
 self.addEventListener('notificationclose', event => {
-  console.log('Notification was closed', event)
-})
+  console.log('Notification fermée sans interaction:', event);
+  // Vous pouvez ajouter une logique d'analyse ici si nécessaire
+});
 
-
-self.skipWaiting();
-clientsClaim();
+// Ne pas activer automatiquement pour permettre à l'utilisateur 
+// de contrôler quand la mise à jour se produit
+// self.skipWaiting(); // Commenté pour permettre la gestion manuelle des mises à jour
+// clientsClaim(); // Commenté car déjà géré dans l'événement 'activate'
